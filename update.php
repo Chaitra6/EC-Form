@@ -19,6 +19,24 @@ if(isset($submit)){
 
     }
 
+    if(isset($_POST['g-recaptcha-response']) && !empty($_POST['g-recaptcha-response']))
+ {
+       $secret = '6LfDbeIZAAAAAAPWrQizLcFZDSG-o3t1rXJxtwiZ';
+       $verifyResponse = file_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.$secret.'&response='.$_POST['g-recaptcha-response']);
+       $responseData = json_decode($verifyResponse);
+       if($responseData->success)
+       {
+           $succMsg = 'Your contact request have submitted successfully.';
+           echo $succMsg;
+       }
+       else
+       {
+           $errMsg = 'Robot verification failed, please try again.';
+           echo $errMsg;
+
+       }
+  }
+
 
 }
 
@@ -51,9 +69,13 @@ if(isset($submit)){
                 <div class="form-group">
                     <label for="name">Enter Your New Email-ID</label>  
                     <input type="text" class="form-control" name="email"> 
+                    <span id="email_error" class="text-danger"></span>
                 </div>
 
-                
+                <div class="form-group" id="captcha">
+                <div class="g-recaptcha" data-sitekey="6LfDbeIZAAAAALguExxTxyC8LW-QnE9jbKQSA3ID"></div>
+                <span id="captcha_error" class="text-danger"></span>
+                </div>
 
                 <input type="submit" class="btn btn-success" name="submit" value="SUBMIT" >
                 
